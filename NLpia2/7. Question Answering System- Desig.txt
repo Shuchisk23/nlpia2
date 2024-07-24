@@ -1,0 +1,47 @@
+7. Question Answering System- Design a questioning answer system using Python
+
+import nltk
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+corpus = [ "Albert Einstein was a German-born theoretical physicist who developed the theory of relativity.", "The Mona Lisa is a half-length portrait painting by the Italian artist Leonardo da Vinci.", "Python is an interpreted, high-level, general-purpose programming language.", "Mount Everest is the highest mountain in the world, located in Nepal." ]
+
+def preprocess_text(text):
+     tokens = nltk.word_tokenize(text.lower())
+     return ' '.join(tokens)
+processed_corpus = [preprocess_text(text) for text in corpus]
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(processed_corpus)
+
+def answer_question(question):
+     question_vec = vectorizer.transform([preprocess_text(question)])
+     similarities = cosine_similarity(question_vec, X)
+     idx = similarities.argmax()
+     return corpus[idx]
+
+questions = [
+ "Who developed the theory of relativity?",
+ "What is the Mona Lisa?",
+ "What is Python used for?",
+ "Where is Mount Everest located?"
+]
+
+for question in questions:
+    print("Question:", question)
+    print("Answer:", answer_question(question))
+    print()
+
+
+-----------------
+Output:
+Question: Who developed the theory of relativity?
+Answer: Albert Einstein was a German-born theoretical physicist who developed the theory of relativity.
+
+Question: What is the Mona Lisa?
+Answer: The Mona Lisa is a half-length portrait painting by the Italian artist Leonardo da Vinci.
+
+Question: What is Python used for?
+Answer: Python is an interpreted, high-level, general-purpose programming language.
+
+Question: Where is Mount Everest located?
+Answer: Mount Everest is the highest mountain in the world, located in Nepal.

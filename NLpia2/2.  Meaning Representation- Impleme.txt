@@ -1,0 +1,32 @@
+2.  Meaning Representation- Implement a Python program to represent the meaning of the given text.
+
+import nltk
+def represent_meaning(text):
+    nltk.download('punkt')
+    nltk.download('averaged_perceptron_tagger')
+    tokens = nltk.word_tokenize(text)
+
+    tags = nltk.pos_tag(tokens)
+    meaning = {}
+    for token, tag in tags:
+        if tag.startswith('VB'): # Verbs
+            meaning['action'] = token
+        elif tag.startswith('NN'): # Nouns
+            if 'subject' not in meaning:
+                meaning['subject'] = token
+            else:
+                meaning['object'] = token
+        elif tag.startswith('JJ'): # Adjectives
+            meaning['adjective'] = token
+    return meaning
+
+sentence = "The cat chased the mouse."
+meaning = represent_meaning(sentence)
+print(sentence)
+print(meaning)
+
+
+-----------------
+Output:
+The cat chased the mouse.
+{'subject': 'cat', 'action': 'chased', 'object': 'mouse'}

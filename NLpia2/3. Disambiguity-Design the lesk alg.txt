@@ -1,0 +1,43 @@
+3. Disambiguity-Design the lesk algorithm in Python to handle word sense disambiguation.
+
+import nltk
+from nltk.corpus import wordnet as wn
+from nltk.tokenize import word_tokenize
+nltk.download('wordnet')
+nltk.download('omw-1.4')
+nltk.download('punkt')
+
+def compute_overlap(context, gloss):
+    context = set(context)
+    gloss = set(gloss)
+    return len(context & gloss)
+
+def lesk_algorithm(word, sentence):
+    context = word_tokenize(sentence)
+    synsets = wn.synsets(word)
+    if not synsets:
+        return None
+    best_sense = synsets[0]
+    max_overlap = 0
+    
+    for sense in synsets:
+        gloss = word_tokenize(sense.definition())
+        overlap = compute_overlap(context, gloss)
+        if overlap > max_overlap:
+            max_overlap = overlap
+            best_sense = sense 
+    return best_sense
+
+sentence = "I went to the bank to deposit my money."
+word = "money"
+sense = lesk_algorithm(word, sentence)
+if sense:
+    print(f"The best sense for '{word}' in the sentence is: {sense.name()}")
+    print(f"Definition: {sense.definition()}")
+else:
+    print(f"No senses found for the word '{word}'.")
+
+-----------------
+Output:
+The best sense for 'money' in the sentence is: money.n.03
+Definition: the official currency issued by a government or national bank

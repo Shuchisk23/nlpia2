@@ -1,0 +1,39 @@
+1. Lexical Semantics- Design Python program to do text classification.
+
+from sklearn.datasets import fetch_20newsgroups
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+newsgroups = fetch_20newsgroups(subset='all')
+categories = newsgroups.target_names
+
+X_train, X_test, y_train, y_test = train_test_split(newsgroups.data, newsgroups.target, 
+test_size=0.3, random_state=42)
+
+vectorizer = TfidfVectorizer(stop_words='english', max_df=0.7)
+X_train_tfidf = vectorizer.fit_transform(X_train)
+X_test_tfidf = vectorizer.transform(X_test)
+
+classifier = LogisticRegression(max_iter=1000, random_state=42)
+classifier.fit(X_train_tfidf, y_train)
+
+y_pred = classifier.predict(X_test_tfidf)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy * 100:.2f}%")
+
+def classify_text(text):
+ text_tfidf = vectorizer.transform([text])
+ prediction = classifier.predict(text_tfidf)
+ return categories[prediction[0]]
+
+new_text = "NASA launches a new space mission."
+predicted_category = classify_text(new_text)
+print(f"The predicted category for the new text is: {predicted_category}")
+
+-----------------
+
+Output:
+Accuracy: 90.11%
+The predicted category for the new text is: sci.space

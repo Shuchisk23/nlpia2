@@ -1,0 +1,27 @@
+6. Stemming- Design a Python program to reduce an inflected word down to its word stem
+
+import nltk
+from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
+def stem_text(text):
+    stemmer = PorterStemmer()
+    words = word_tokenize(text)
+    stemmed_words = [stemmer.stem(word) for word in words]
+    stemmed_text = ' '.join(stemmed_words)
+    return stemmed_text
+
+text = "Stemming is used to reduce words down to their word stem."
+stemmed_text = stem_text(text)
+print("Original Text:")
+print(text)
+print("\nText after stemming:")
+print(stemmed_text)
+
+
+-----------------
+Output:
+Original Text:
+Stemming is used to reduce words down to their word stem.
+
+Text after stemming:
+stem is use to reduc word down to their word stem .

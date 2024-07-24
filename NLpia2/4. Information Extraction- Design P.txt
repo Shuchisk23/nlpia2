@@ -1,0 +1,50 @@
+4. Information Extraction- Design Python programs to extract structured information from unstructured information.
+
+import spacy
+import email
+from email.policy import default
+
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    import subprocess
+    import sys
+    subprocess.check_call([sys.executable, '-m', 'spacy', 'download', 'en_core_web_sm'])
+    nlp = spacy.load("en_core_web_sm")
+def named_entity_recognition(text):
+     doc = nlp(text)
+     entities = [(ent.text, ent.label_) for ent in doc.ents]
+     return entities
+
+email_content = """From: sender@example.com
+To: recipient@example.com
+Subject: Sample Email
+This is a sample email for testing information extraction.
+"""
+
+msg = email.message_from_string(email_content, policy=default)
+
+from_address = msg['From']
+to_address = msg['To']
+subject = msg['Subject']
+body = msg.get_body(preferencelist=('plain')).get_content()
+print("Named Entity Recognition with spaCy:")
+entities = named_entity_recognition(body)
+for entity, label in entities:
+    print(f"Entity: {entity}, Label: {label}")
+print("\nExtracting Information from Emails:")
+print(f"From: {from_address}")
+print(f"To: {to_address}")
+print(f"Subject: {subject}")
+print(f"Body:\n{body}")
+
+-----------------
+Output:
+Named Entity Recognition with spaCy:
+
+Extracting Information from Emails:
+From: sender@example.com
+To: recipient@example.com
+Subject: Sample Email
+Body:
+This is a sample email for testing information extraction.
